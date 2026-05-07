@@ -37,3 +37,23 @@ SELECT * FROM comercios WHERE email IS NOT NULL AND activo = B'1';
 --parte5
 SELECT COUNT(*) FROM usuarios;
 SELECT COUNT(fecha_nacimiento) AS con_fecha, COUNT(*) - COUNT(fecha_nacimiento) AS sin_fecha FROM usuarios;
+SELECT MAX(descuento), MIN(descuento), AVG(descuento) FROM beneficios WHERE activo = B'1';
+
+--parte6
+SELECT b.nombre, c.nombre FROM beneficios b INNER JOIN comercios c ON b.id_comercio = c.id;
+SELECT u.nombre, u.apellido, p.nombre FROM usuarios u INNER JOIN provincias p ON u.id_provincia = p.id;
+SELECT u.nombre, u.apellido, p.nombre FROM usuarios u LEFT JOIN provincias p ON u.id_provincia = p.id;
+SELECT u.nombre, u.apellido, p.nombre FROM provincias p RIGHT JOIN usuarios u ON u.id_provincia = p.id;
+SELECT u.nombre, u.apellido FROM usuarios u LEFT JOIN beneficios_usuarios bu ON bu.id_usuario = u.id WHERE bu.id IS NULL;
+SELECT u.nombre, u.apellido, b.nombre, c.nombre, bu.fecha FROM beneficios_usuarios bu INNER JOIN usuarios u ON bu.id_usuario = u.id INNER JOIN beneficios b ON bu.id_beneficio = b.id INNER JOIN comercios c ON b.id_comercio = c.id;
+
+--parte7
+SELECT c.nombre, COUNT(b.id) AS cantidad FROM comercios c INNER JOIN beneficios b ON b.id_comercio = c.id GROUP BY c.nombre ORDER BY cantidad DESC;
+SELECT c.nombre, COUNT(b.id) AS cantidad FROM comercios c INNER JOIN beneficios b ON b.id_comercio = c.id GROUP BY c.nombre HAVING COUNT(b.id) > 3 ORDER BY cantidad DESC;
+SELECT c.nombre, SUM(b.descuento) AS suma_descuentos FROM comercios c INNER JOIN beneficios b ON b.id_comercio = c.id WHERE b.activo = B'1' GROUP BY c.nombre ORDER BY suma_descuentos DESC;
+SELECT c.nombre, AVG(b.descuento) AS promedio, COUNT(b.id) AS cantidad FROM comercios c INNER JOIN beneficios b ON b.id_comercio = c.id GROUP BY c.nombre HAVING AVG(b.descuento) > 15;
+SELECT p.nombre, COUNT(DISTINCT bu.id_beneficio) AS beneficios_distintos FROM provincias p INNER JOIN usuarios u ON u.id_provincia = p.id INNER JOIN beneficios_usuarios bu ON bu.id_usuario = u.id GROUP BY p.nombre ORDER BY beneficios_distintos DESC;
+SELECT p.nombre, COUNT(u.id) AS cantidad FROM provincias p INNER JOIN usuarios u ON u.id_provincia = p.id GROUP BY p.nombre ORDER BY cantidad DESC;
+SELECT p.nombre, COUNT(u.id) AS cantidad FROM provincias p LEFT JOIN usuarios u ON u.id_provincia = p.id GROUP BY p.nombre ORDER BY cantidad DESC;
+SELECT c.nombre, COUNT(bu.id) AS canjes FROM comercios c INNER JOIN beneficios b ON b.id_comercio = c.id INNER JOIN beneficios_usuarios bu ON bu.id_beneficio = b.id GROUP BY c.nombre ORDER BY canjes DESC LIMIT 5;
+SELECT u.apellido, u.nombre, COUNT(bu.id) AS canjes FROM usuarios u LEFT JOIN beneficios_usuarios bu ON bu.id_usuario = u.id GROUP BY u.apellido, u.nombre ORDER BY canjes DESC;
