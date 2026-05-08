@@ -57,3 +57,11 @@ SELECT p.nombre, COUNT(u.id) AS cantidad FROM provincias p INNER JOIN usuarios u
 SELECT p.nombre, COUNT(u.id) AS cantidad FROM provincias p LEFT JOIN usuarios u ON u.id_provincia = p.id GROUP BY p.nombre ORDER BY cantidad DESC;
 SELECT c.nombre, COUNT(bu.id) AS canjes FROM comercios c INNER JOIN beneficios b ON b.id_comercio = c.id INNER JOIN beneficios_usuarios bu ON bu.id_beneficio = b.id GROUP BY c.nombre ORDER BY canjes DESC LIMIT 5;
 SELECT u.apellido, u.nombre, COUNT(bu.id) AS canjes FROM usuarios u LEFT JOIN beneficios_usuarios bu ON bu.id_usuario = u.id GROUP BY u.apellido, u.nombre ORDER BY canjes DESC;
+
+--extras
+SELECT comercios.nombre, AVG(beneficios.descuento) AS promedio FROM comercios INNER JOIN beneficios ON beneficios.id_comercio = comercios.id GROUP BY comercios.nombre ORDER BY promedio DESC LIMIT 1;
+
+SELECT provincias.nombre, COUNT(DISTINCT usuarios.id) AS cantidad_usuarios, COUNT(beneficios_usuarios.id) AS cantidad_canjes FROM provincias
+LEFT JOIN usuarios ON usuarios.id_provincia = provincias.id
+LEFT JOIN beneficios_usuarios ON beneficios_usuarios.id_usuario = usuarios.id
+GROUP BY provincias.nombre ORDER BY cantidad_usuarios DESC;
